@@ -1,16 +1,90 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
+title: "Reproducible Research: Activity Data Report (Project 1)"
+header-includes:
+        - \usepackage{tabularx}
 output: 
   html_document:
     keep_md: true
+    toc: true
+    toc_float: true
+    toc_depth: 2
 ---
+
 
 
 ## Loading and preprocessing the data
 
+```{r}
+temp <- tempfile()
+download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",
+              temp, mode = "wb")
+file <- unz(temp, "activity.csv")
+data <- read.csv(file)
+unlink(temp)
+```
+
+Now we'll take a look at the data briefly to determine if any preprocessing is needed  
+```{r}
+summary(data)
+```
+
+It seems every date has 288 readings, let's make sure that's true across the whole dataset.  
+```{r}
+all(summary(data$date)==288)
+```
+
+
+It's also seen here that `data$steps` has some NAs, so let's see what dates those occured and how many.  
+```{r}
+datesOfNA <- summary(data$date[is.na(data$steps)])
+datesOfNA[datesOfNA != 0]
+```
+Looks like the steps weren't recorded on certain days. We'll store these dates in a variable for later use.  
+```{r}
+datesOfNASteps <- names(datesOfNA[datesOfNA != 0])
+```
 
 
 ## What is mean total number of steps taken per day?
+```{r message = FALSE}
+library(tidyverse)
+meanPerDay <- data %>% group_by(date) %>%
+        summarize(mean = mean(steps, na.rm = TRUE))
+```
+
+NOTE: I wanted to create a nice table but this would involve using `tabularx` and diving deeper into LaTeX. Since this assignment is focussing on just knitr I'll have to put that reasearch off for another time  
+```{r}
+##Split up columns by month for easier viewing
+oct <- filter(meanPerDay,
+                months.Date(as.Date(meanPerDay$date)) == "October")
+byMonthMeans <- cbind(oct,
+                    rbind(filter(meanPerDay,
+                months.Date(as.Date(meanPerDay$date)) == "November"),
+                c(NA, NA)))
+
+colnames(byMonthMeans) <- c("October", "Means", "November", "Means")
+
+```
+```{r results = "asis"}
+library(xtable)
+table <- xtable(byMonthMeans)
+print(table, include.rownames = FALSE, type = "html")
+```
+
+```{r warning = FALSE}
+## means as a plot  
+dateBreaks <-as.character(
+        meanPerDay$date[c(2,10,20,31,31+10,31+20,31+29)])
+dateLabels <-  gsub("2012-", "", dateBreaks)
+plot <- ggplot(meanPerDay, aes(date, mean))
+plot + 
+        geom_col() +
+        xlab("Date (2012)") +
+        scale_x_discrete(breaks = dateBreaks, labels = dateLabels) +
+        ylab("Mean Steps")
+        
+        
+```
 
 
 
