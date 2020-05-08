@@ -136,6 +136,28 @@ imputedData <- data
 imputedData[which(is.na(imputedData$steps)),]$steps <- means$avg
 ```
 
+We'll now look at how the distribution of steps per day has changed with these imputed values.
+```{r Imputed_Steps_Histogram}
+
+imputedSums <- imputedData  %>%
+        group_by(date) %>%
+        summarize(total = sum(steps))
+
+## Create histogram of total steps per day  
+plot <- ggplot(imputedSums, aes(total))
+plot + 
+        geom_histogram(binwidth = 1000, 
+                       color = "black", fill = "darkgrey") +
+        xlab("Total Steps per Day") +
+        scale_x_continuous(breaks = seq(0,
+                ceiling(max(imputedSums$total)/1000)*1000, by = 2000)) +
+        ylab("Count") +
+        scale_y_continuous(breaks = seq(0, 10, by = 2)) +
+        ggtitle("Histogram of Total Steps per Day with Imputed Values")
+```
+Significantly less counts near 0 are seen in the imputed data. This is because when `sum` evaluates a subset that is al `NA` it sets the sum to 0.
+  
+
 Now we'll look at how the means and medians have changed with the new imputed data set. We're interested in the change of the median so we'll exclude readings of 0 from this measurement to get a better idea of how it has changed.
 ```{r comparing_imputed}
 comparision <- data.frame(
