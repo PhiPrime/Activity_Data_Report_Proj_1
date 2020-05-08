@@ -1,7 +1,5 @@
 ---
 title: "Reproducible Research: Activity Data Report (Project 1)"
-header-includes:
-        - \usepackage{tabularx}
 output: 
   html_document:
     keep_md: true
