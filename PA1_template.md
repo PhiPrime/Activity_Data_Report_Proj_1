@@ -128,7 +128,9 @@ OGscipen <- getOption("scipen")
 options(scipen = 999)
 ```
   
-The histogram above also shows the mean (9354) in red and the median (10395) in blue.  
+The histogram above also shows the mean (9354) in red and the median (10395) in blue.
+
+
 
 
 ## What is the average daily activity pattern?
@@ -151,8 +153,7 @@ plot + geom_line() +
 
 ![](PA1_template_files/figure-html/daily_pattern-1.png)<!-- -->
 
-
-
+The time interval with the max average steps was 08:35 with an average of 206.17 steps.  
 
 ## Imputing missing values
 To impute the missing values we're first going to see if the missing days are weekdays or weekends as these factors may change the activity levels  

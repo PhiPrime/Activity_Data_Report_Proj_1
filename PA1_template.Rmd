@@ -96,7 +96,9 @@ OGscipen <- getOption("scipen")
 options(scipen = 999)
 ```
   
-The histogram above also shows the mean (`r round(meanPerDay, 0)`) in red and the median (`r round(medPerDay, 0)`) in blue.  
+The histogram above also shows the mean (`r round(meanPerDay, 0)`) in red and the median (`r round(medPerDay, 0)`) in blue.
+
+
 
 
 ## What is the average daily activity pattern?
@@ -116,8 +118,7 @@ plot + geom_line() +
         ggtitle("Average Daily Activity Pattern")
 ```
 
-
-
+The time interval with the max average steps was `r  summary[which.max(summary$avg),]$time` with an average of `r round(summary[which.max(summary$avg),]$avg, 2)` steps.  
 
 ## Imputing missing values
 To impute the missing values we're first going to see if the missing days are weekdays or weekends as these factors may change the activity levels  
